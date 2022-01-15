@@ -5,7 +5,6 @@ const config = require("../environments/environment")
 class Database {
 
     static getConnection() {
-
         return mysql.createConnection({
             host: (config['in_production']) ? process.env.HOST : config.database.HOST,
             user: (config['in_production']) ? process.env.USER : config.database.USER,
@@ -14,19 +13,19 @@ class Database {
         });
     }
 
-    public static connect(): void {
-        this.getConnection().connect((error: any) => {
+    static connect() {
+        this.getConnection().connect((error) => {
             if (error) return error
             console.log("MySQL Database connected!")
         })
     }
 
-    public static disconnect(): void {
-        this.getConnection().end((error: any) => {
+    static disconnect() {
+        this.getConnection().end((error) => {
             if (error) return error
             console.log("DB connection end")
         })
     }
 }
 
-export default Database
+module.exports = Database
