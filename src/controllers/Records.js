@@ -1,6 +1,10 @@
 
 class Records {
 
+    static getUsers() {
+
+    }
+
 }
 
 
@@ -22,3 +26,6 @@ json = {
     username: "",
     password: ""
 }
+
+
+
