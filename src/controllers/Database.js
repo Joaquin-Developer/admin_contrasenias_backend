@@ -6,11 +6,11 @@ class Database {
 
     static getConnection() {
         return mysql.createConnection({
-            host: (config['in_production']) ? process.env.HOST : config.database.HOST,
-            user: (config['in_production']) ? process.env.USER : config.database.USER,
-            password: (config['in_production']) ? process.env.PASSWORD : config.database.PASSWORD,
-            database: (config['in_production']) ? process.env.NAME : config.database.NAME
-        });
+            host: (config['IN_PRODUCTION']) ? process.env.HOST : config.DEVELOPMENT_DATABASE.HOST,
+            user: (config['IN_PRODUCTION']) ? process.env.USER : config.DEVELOPMENT_DATABASE.USER,
+            password: (config['IN_PRODUCTION']) ? process.env.PASSWORD : config.DEVELOPMENT_DATABASE.PASSWORD,
+            database: (config['IN_PRODUCTION']) ? process.env.NAME : config.DEVELOPMENT_DATABASE.NAME
+        })
     }
 
     static connect() {
@@ -27,5 +27,7 @@ class Database {
         })
     }
 }
+
+// connect()
 
 module.exports = Database
