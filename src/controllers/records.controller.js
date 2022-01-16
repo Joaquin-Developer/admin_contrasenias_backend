@@ -76,7 +76,18 @@ class Records {
             })
     }
 
-    static new() {
+    async static new(req, res) {
+        const { idUser, siteName, siteUsername, siteMail, encryptedPassw } = req.body
+
+        if (idUser && siteName && siteUsername && siteMail && encryptedPassw) {
+            const data = await Query.insertPasswRegister([idUser, siteName, siteUsername, siteMail, encryptedPassw])
+
+            const status = 500 ? data.error : 200
+            res.status(status).json(data)
+
+        } else {
+            res.status(500).json({ error: true, message: "Missing params in Body Request" })
+        }
 
     }
 
