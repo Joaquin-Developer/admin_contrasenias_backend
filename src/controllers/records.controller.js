@@ -60,7 +60,7 @@ class Records {
                 pr.id_passw_encrypted
             FROM 
                 PASSW_RECORDS pr
-                JOIN ALL_USERS au ON pr.id_user = au.id_user
+                JOIN ALL_USERS au ON pr.id_username = au.id_user
             WHERE
                 au.username = '${username}' OR au.id_user = ${idUser}
         `
@@ -76,13 +76,13 @@ class Records {
             })
     }
 
-    async static new(req, res) {
+    static async new(req, res) {
         const { idUser, siteName, siteUsername, siteMail, encryptedPassw } = req.body
 
         if (idUser && siteName && siteUsername && siteMail && encryptedPassw) {
-            const data = await Query.insertPasswRegister([idUser, siteName, siteUsername, siteMail, encryptedPassw])
+            const data = await Query.insertPasswRegister(idUser, siteName, siteUsername, siteMail, encryptedPassw)
 
-            const status = 500 ? data.error : 200
+            const status = data.error ? 500 : 200
             res.status(status).json(data)
 
         } else {

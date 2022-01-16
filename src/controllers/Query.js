@@ -1,4 +1,5 @@
 const Database = require("./Database")
+const mysql2 = require("mysql2/promise")
 
 module.exports = class Query {
 
@@ -59,6 +60,7 @@ module.exports = class Query {
         // remove last char (coma: ,)
         stringValues = stringValues.slice(0, -1)
 
+        //TODO Inseguro ante inyecciones Sql -> cambiar esto!
         this.query = `
             UPDATE ${tableName}
             SET ${stringValues}
@@ -71,6 +73,45 @@ module.exports = class Query {
                 return resolve(rows)
             })
         })
+    }
+
+    /**
+     * custom queries:
+     */
+
+    static async insertPasswRegister(idUser, siteName, siteUsername, siteMail, encryptedPassw) {
+
+        const connection = await Database.getMySql2Connection()
+        await connection.beginTransaction()
+
+        try {
+
+            await connection.execute("INSERT INTO PASSW_ENCRYPTED VALUES(null, ?)", [encryptedPassw])
+
+            const select = await connection.execute(`
+                SELECT id_passw_encrypted FROM PASSW_ENCRYPTED
+                WHERE encrypted_passw = ?
+            `, [encryptedPassw])
+
+            const passwIdInserted = await select[0][0]["id_passw_encrypted"]
+
+            const params = [idUser, siteName, siteUsername, siteMail, passwIdInserted]
+            console.log(params)
+
+            await connection.execute(`INSERT INTO PASSW_RECORDS VALUES(null, ?, ?, ?, ?, ${passwIdInserted})`,
+                [idUser, siteName, siteUsername, siteMail]
+            )
+
+            // if not problems:
+            await connection.commit()
+            return { error: false, message: "OK" }
+
+        } catch (error) {
+            console.log(error)
+            await connection.rollback()
+            return { error: true, message: "Internal server error - Data not inserted" }
+        }
+
     }
 
 }
