@@ -6,8 +6,29 @@ class Records {
     /**
      * A partir de una key, obtiene la contraseña encriptada
      */
-    static getEncryptedPassw() {
+    static getEncryptedPassw(req, res) {
+        let { idEncrypted } = req.query
 
+        if (!idEncrypted) {
+            res.status(500).json({ error: true, message: "Error: Missing 'idEncrypted' param." })
+        }
+
+        const QUERY = `
+            SELECT 
+                pe.id_passw_encrypted,
+                pe.encrypted_passw
+            FROM passw_encrypted pe
+            WHERE pe.id_passw_encrypted = ${idEncrypted}
+        `
+        new Query(QUERY).select()
+            .then(data => {
+                // console.log(data)
+                res.status(200).json(JSON.parse(data))
+            })
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({ error: true, message: "Internal server error" })
+            })
     }
 
     /**
