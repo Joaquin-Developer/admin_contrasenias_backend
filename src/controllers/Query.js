@@ -124,25 +124,18 @@ module.exports = class Query {
 
     }
 
-    static async updatePasswRegister(idUser, siteName, siteUsername, siteMail, encryptedPassw) {
+    static async updatePasswRegister(idUser, siteName, siteUsername, siteMail, encryptedPassw, idPasswEncrypted) {
 
         const connection = await Database.getMySql2Connection()
         await connection.beginTransaction()
 
         try {
 
-            const select = await connection.execute(`
-                SELECT id_passw_encrypted FROM PASSW_ENCRYPTED
-                WHERE encrypted_passw = ?
-            `, [encryptedPassw])
-
-            const passwId = await select[0][0]["id_passw_encrypted"]
-
             await connection.execute(```
                 UPDATE PASSW_ENCRYPTED
                 SET encrypted_passw = ?
                 WHERE id_passw_encrypted = ?
-            ```, [encryptedPassw, passwId])
+            ```, [encryptedPassw, idPasswEncrypted])
 
             await connection.execute(```
                 UPDATE PASSW_RECORDS
@@ -163,6 +156,29 @@ module.exports = class Query {
             await connection.rollback()
             return { error: true, message: "Internal server error - Data not inserted" }
         }
+    }
+
+    static async deletePasswRegister(idUser, idPasswEncrypted) {
+        const connection = await Database.getMySql2Connection()
+        await connection.beginTransaction()
+
+        try {
+            await connection.execute("DELETE FROM PASSW_ENCRYPTED WHERE id_passw_encrypted = ?", [idPasswEncrypted])
+
+            await connection.execute(```
+                DELETE FROM PASSW_RECORDS WHERE id_passw_encrypted = ? 
+                AND id_username = ?
+            ```, [idPasswEncrypted, idUser])
+
+            // if not problems:
+            await connection.commit()
+            // connection.destroy()  // ??
+            return { error: false, message: "OK" }
+
+        } catch (error) {
+            connection.rollback();
+        }
+
     }
 
 }
