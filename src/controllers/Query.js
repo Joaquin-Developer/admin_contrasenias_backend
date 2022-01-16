@@ -18,16 +18,20 @@ module.exports = class Query {
     }
 
     genericSelect(tablename) {
-        const sql = `SELECT * FROM ${tablename}`
+        const sql = `SELECT * FROM ?`
 
         return new Promise((resolve, reject) => {
-            Database.getConnection().query(sql, (error, rows, fields) => {
+            Database.getConnection().query(sql, [tablename], (error, rows, fields) => {
                 if (error) return reject(error)
                 return resolve(JSON.stringify(rows))
             })
         })
         // disconnect()
         // return promise
+    }
+
+    insert(queryParams) {
+
     }
 
     genericInsert() {
