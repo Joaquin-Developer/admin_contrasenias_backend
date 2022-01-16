@@ -2,7 +2,6 @@ const Query = require("./Query")
 
 class Records {
 
-
     /**
      * A partir de una key, obtiene la contraseña encriptada
      */
@@ -10,7 +9,11 @@ class Records {
         let { idEncrypted } = req.query
 
         if (!idEncrypted) {
-            res.status(500).json({ error: true, message: "Error: Missing 'idEncrypted' param." })
+            res.status(500).json({ error: true, message: "Missing 'idEncrypted' param." })
+            return
+        } else if (isNaN(Number(idEncrypted))) {
+            res.status(500).json({ error: true, message: "Invalid data in param request: 'idEncrypt is not valid'" })
+            return
         }
 
         const QUERY = `
@@ -18,9 +21,11 @@ class Records {
                 pe.id_passw_encrypted,
                 pe.encrypted_passw
             FROM passw_encrypted pe
-            WHERE pe.id_passw_encrypted = ${idEncrypted}
+            WHERE pe.id_passw_encrypted = ?
         `
-        new Query(QUERY).select()
+        console.log(idEncrypted)
+
+        new Query(QUERY).select(idEncrypted)
             .then(data => {
                 // console.log(data)
                 res.status(200).json(JSON.parse(data))

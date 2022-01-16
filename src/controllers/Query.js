@@ -6,9 +6,9 @@ module.exports = class Query {
         this.query = query
     }
 
-    select() {
+    select(queryParams) {
         const promise = new Promise((resolve, reject) => {
-            Database.getConnection().query(this.query, (error, rows, fields) => {
+            Database.getConnection().query(this.query, queryParams, (error, rows) => {
                 if (error) return reject(error)
                 return resolve(JSON.stringify(rows))
             })
