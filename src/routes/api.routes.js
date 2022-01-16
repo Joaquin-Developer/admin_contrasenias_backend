@@ -9,12 +9,12 @@ router.get("/getEncryptedPassw", RecordsController.getEncryptedPassw)
 router.get("/getAllPasswordsRecordsByUser", RecordsController.getAllPasswordsRecordsByUser)
 
 router.post("/insertUser", UsersController.new)
-router.post("/newPasswRecord", RecordsController.new)
+router.post("/insertPasswRecord", RecordsController.new)
 
-router.post("/updatePasswRecord", RecordsController.update)
 router.post("/updateUser", UsersController.update)
+router.post("/updatePasswRecord", RecordsController.update)
 
-router.delete("/deletePasswRecord", RecordsController.delete)
 router.delete("/deleteUser", UsersController.delete)
+router.delete("/deletePasswRecord", RecordsController.delete)
 
 module.exports = router
