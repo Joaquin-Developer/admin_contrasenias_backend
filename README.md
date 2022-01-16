@@ -12,7 +12,7 @@
 
 ## Funcionamiento:
 Esta API rest es el nexo entre el usuario y sus datos.  
-Se engarga de realizar un CRUD de los datos del usuario, y sus registros de contraseñas.  
+Se encarga de realizar un CRUD de los datos del usuario, y sus registros de contraseñas.  
 En la base de datos, se guarda información de cada usuario (username y contraseña) y cada uno de los registros de contraseñas.  
 Con respecto a los registros de contraseñas, se guarda el nombre de sitio o red social, el usuario, el correo asociado (no obligatorio), y la contraseña encriptada.  
 Es importante destacar que los datos anteriores son públicos, y que la contraseña se guarda de forma encriptada, de la misma forma que la envía el cliente a través de una petición http.  
