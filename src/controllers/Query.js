@@ -31,7 +31,12 @@ module.exports = class Query {
     }
 
     insert(queryParams) {
-
+        return new Promise((resolve, reject) => {
+            Database.getConnection().query(this.query, queryParams, (error, result) => {
+                if (error) return reject(error)
+                return resolve(JSON.stringify(result))
+            })
+        })
     }
 
     genericInsert() {
