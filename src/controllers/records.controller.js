@@ -91,8 +91,19 @@ class Records {
 
     }
 
-    static update() {
+    static update(req, res) {
+        const { idUser, siteName, siteUsername, siteMail, encryptedPassw } = req.body
 
+        if (idUser && siteName && siteUsername && siteMail && encryptedPassw) {
+
+            const data = await Query.updatePasswRegister(idUser, siteName, siteUsername, siteMail, encryptedPassw)
+
+            const status = data.error ? 500 : 200
+            res.status(status).json(data)
+
+        } else {
+            res.status(500).json({ error: true, message: "Missing params in Body Request" })
+        }
     }
 
     static delete() {
