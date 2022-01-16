@@ -91,7 +91,7 @@ class Records {
 
     }
 
-    static update(req, res) {
+    static async update(req, res) {
         const { idUser, siteName, siteUsername, siteMail, encryptedPassw } = req.body
 
         if (idUser && siteName && siteUsername && siteMail && encryptedPassw) {
